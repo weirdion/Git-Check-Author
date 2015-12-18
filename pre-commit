@@ -22,4 +22,17 @@
 
 target_author_name=${GIT_AUTHOR_EMAIL%@*}
 
-
+if [[ $target_author_name != $GIT_AUTHOR_NAME ]]; then
+	echo "##########################################"
+	echo "Your name should be the same as your username."
+	echo "Example: IU-ID <IU-ID@indiana.edu>"
+	echo
+	echo "Fix your username by using:"
+	echo "git config user.name IU-ID"
+	echo "Then try commiting again"
+	echo "##########################################"
+	exit 1
+else
+	echo "Correct Email! Thank you"
+	exit 0
+fi
