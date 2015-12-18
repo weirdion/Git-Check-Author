@@ -33,9 +33,11 @@
 
 # ============================================================
 
-while read old new name; do
-	email=$(git log -1 --pretty=format:%ae $new)
-	echo $email
+while read oldsha newsha refname; do
+	authoremail=$(git log -1 --pretty=format:%ae $newsha)
+	commiteremail=$(git log -1 --pretty=format:%ce $newsha)
+	echo "Author Email: $authoremail"
+	echo "Commiter Email: $commiteremail"
 done
 
 
