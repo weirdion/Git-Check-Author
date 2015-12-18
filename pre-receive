@@ -33,11 +33,18 @@
 
 # ============================================================
 
+checkEmail() {
+	if [[ grep -w $authorEmail /u/softeng/.ssh/authorized_keys ]]; then
+			echo "Author Email: $authoremail"
+		else
+			echo "Unauthorized Email"
+		fi	
+}
+
+# While loop reads the input from given to pre-receive when it is triggered
 while read oldsha newsha refname; do
-	authoremail=$(git log -1 --pretty=format:%ae $newsha)
-	commiteremail=$(git log -1 --pretty=format:%ce $newsha)
-	echo "Author Email: $authoremail"
-	echo "Commiter Email: $commiteremail"
+	authorEmail=$(git log -1 --pretty=format:%ae $newsha)
+	checkEmail
 done
 
 
