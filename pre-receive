@@ -34,7 +34,7 @@
 # ============================================================
 
 checkEmail() {
-	if [[ grep -w $authorEmail /u/softeng/.ssh/authorized_keys ]]; then
+	if [[ $(grep -w $authorEmail /u/softeng/.ssh/authorized_keys | wc -w) -gt 1 ]]; then
 			echo "Author Email: $authoremail"
 		else
 			echo "Unauthorized Email"
