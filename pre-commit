@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Git-Replace-Author : pre-commit hook
+# P532 - Sub-project
+
+# Made By: Ankit Sadana
+# Username: asadana
+# Made On: 12/18/2015
+
+# Last Edited By: Ankit Sadana
+# Username: asadana
+# Last Edited On: 12/18/2015
+
+# ============================================================
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# ============================================================
+
+target_author_name=${GIT_AUTHOR_EMAIL%@*}
+
+
