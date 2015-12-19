@@ -33,6 +33,7 @@ if [[ $target_author_name != $GIT_AUTHOR_NAME ]]; then
 	echo "##########################################"
 	exit 1
 else
-	echo "Correct Email! Thank you"
+	# echo "Correct Email! Thank you"
+	echo
 	exit 0
 fi
