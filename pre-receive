@@ -61,6 +61,7 @@ checkName() {
 	flag=0
 
 	if [[ -a $authorFile ]]; then
+		flag=0
 		while read -r line || [[ -n $line ]]
 		do
 			IFS=' ' read email name <<< "$line"
@@ -72,15 +73,20 @@ checkName() {
 				break
 			fi
 		done < $authorFile
-		flag=0
 	fi
+	echo
+	echo "#######################################"
+	echo "AuthorName: $expectedName"
+	echo "AuthorEmail: $authorEmail"
+	echo "flag: $flag"
+	echo 
 
 	# If condition compares authorName and expectedName
-	if [ $authorName == $expectedName ] && [ $flag -eq 1 ]; then
+	if [[ $authorName == $expectedName && $flag -eq 1 ]]; then
 			# Uncomment this for debugging
 			echo "Author Name: $expectedName"
 			exit 0
-		elif [ $authorName != $expectedName ] && [ $flag -eq 1 ]; then
+		elif [[ $authorName != $expectedName && $flag -eq 1 ]]; then
 			echo "Author Name found: $authorName"
 			echo "Expected Name : $expectedName"
 
@@ -93,6 +99,7 @@ checkName() {
 			echo "##########################################"
 			exit 1
 		else
+			echo "Nothing nothing nothing"
 			exit 0
 	fi
 
