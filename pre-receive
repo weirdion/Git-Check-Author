@@ -33,8 +33,10 @@
 # ============================================================
 
 # Variable to store the file path of authorized names
+# 
 authorFile=~/.ssh/authorized_names
 
+# 
 checkEmail() {
 	# If condition checks if the authorEmail is available in the authorized_keys
 	if [[ $(grep -w $authorEmail ~/.ssh/authorized_keys | wc -w) -gt 1 ]]; then
@@ -44,7 +46,7 @@ checkEmail() {
 		else
 			echo "##########################################"
 			echo "You are using an unauthorized email."
-			echo "Expected commit author format: IU-ID <IU-ID@indiana.edu>"
+			echo "Expected commit author format: FirstName LastName <IU-ID@indiana.edu>"
 			echo "Please configure your git user.email to IU-email used to generate the SSH-key."
 			echo "You can fix your email using: git config user.email IU-ID@indiana.edu"
 			echo "Then fix the last commit with: git commit --amend --reset-author"
@@ -56,50 +58,47 @@ checkEmail() {
 checkName() {
 	# Retrieving the author name from SHA-1 (newsha)
 	authorName=$(git log -1 --pretty=format:%an $newsha)
-	# Triming the authorEmail for the username
-	# expectedName=${authorEmail%@*}
+	#
 	flag=0
 
 	if [[ -a $authorFile ]]; then
 		flag=0
+		#
 		while read -r line || [[ -n $line ]]
 		do
 			IFS=' ' read email name <<< "$line"
 
 			if [[ $authorEmail == $email ]]; then
-				echo "Hello Ankit, what you doing"
+				# Uncomment this for debugging
+				# echo "Email found: $email"
 				expectedName=$name
 				flag=1
 				break
 			fi
 		done < $authorFile
 	fi
-	echo
-	echo "#######################################"
-	echo "AuthorName: $expectedName"
-	echo "AuthorEmail: $authorEmail"
-	echo "flag: $flag"
-	echo 
+
+	# Uncomment for debugging
+	# echo "AuthorName: $expectedName"
+	# echo "Flag: $flag"
 
 	# If condition compares authorName and expectedName
 	if [[ $authorName == $expectedName && $flag -eq 1 ]]; then
 			# Uncomment this for debugging
-			echo "Author Name: $expectedName"
+			# echo "Author Name: $expectedName"
 			exit 0
-		elif [[ $authorName != $expectedName && $flag -eq 1 ]]; then
-			echo "Author Name found: $authorName"
-			echo "Expected Name : $expectedName"
 
+		elif [[ $authorName != $expectedName && $flag -eq 1 ]]; then
+			
 			echo "##########################################"
 			echo "You are using wrong name for commits."
 			echo "Expected commit author format: FirstName LastName <IU-ID@indiana.edu>"
 			echo "Please configure your git user.name to your Full Name before proceeding"
-			echo "You can fix your name using: git config user.name FirstName LastName"
+			echo "You can fix your name using: git config user.name \"FirstName LastName\""
 			echo "Then fix the last commit with: git commit --amend --reset-author"
 			echo "##########################################"
 			exit 1
 		else
-			echo "Nothing nothing nothing"
 			exit 0
 	fi
 
