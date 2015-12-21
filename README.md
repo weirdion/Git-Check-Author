@@ -1,4 +1,4 @@
-Git-Replace-Author
+Git-Check-Author
 ===================
 P532 - Sub-Project : Git hooks written in bash, to filter Author Name/Email used.
 ----------
