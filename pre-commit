@@ -11,7 +11,7 @@
 
 # Last Edited By: Ankit Sadana
 # Username: asadana
-# Last Edited On: 12/18/2015
+# Last Edited On: 12/21/2015
 
 # ============================================================
 #
@@ -22,8 +22,11 @@
 #
 # ============================================================
 
+# Retreive the GIT_AUTHOR_EMAIL from the git config
+# And trims everything after '@'
 target_author_name=${GIT_AUTHOR_EMAIL%@*}
 
+# If condition checks if the email username is same as GIT_AUTHOR_NAME
 if [[ $target_author_name != $GIT_AUTHOR_NAME ]]; then
 	echo "##########################################"
 	echo "Your name should be the same as your username."
@@ -35,6 +38,7 @@ if [[ $target_author_name != $GIT_AUTHOR_NAME ]]; then
 	echo "##########################################"
 	exit 1
 else
+	# Uncomment this for debugging
 	# echo "Correct Email! Thank you"
 	echo
 	exit 0
