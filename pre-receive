@@ -32,6 +32,9 @@
 
 # ============================================================
 
+# Variable to store the file path of authorized names
+authorFile=~/.ssh/authorized_names
+
 checkEmail() {
 	# If condition checks if the authorEmail is available in the authorized_keys
 	if [[ $(grep -w $authorEmail ~/.ssh/authorized_keys | wc -w) -gt 1 ]]; then
@@ -54,25 +57,43 @@ checkName() {
 	# Retrieving the author name from SHA-1 (newsha)
 	authorName=$(git log -1 --pretty=format:%an $newsha)
 	# Triming the authorEmail for the username
-	expectedName=${authorEmail%@*}
+	# expectedName=${authorEmail%@*}
+	flag=0
+
+	if [[ -a $authorFile ]]; then
+		while read -r line || [[ -n $line ]]
+		do
+			IFS=' ' read email name <<< "$line"
+
+			if [[ $authorEmail == $email ]]; then
+				echo "Hello Ankit, what you doing"
+				expectedName=$name
+				flag=1
+				break
+			fi
+		done < $authorFile
+		flag=0
+	fi
 
 	# If condition compares authorName and expectedName
-	if [[ $authorName == $expectedName ]]; then
+	if [ $authorName == $expectedName ] && [ $flag -eq 1 ]; then
 			# Uncomment this for debugging
-			# echo "Author Name: $authorName"
+			echo "Author Name: $expectedName"
 			exit 0
-		else
+		elif [ $authorName != $expectedName ] && [ $flag -eq 1 ]; then
 			echo "Author Name found: $authorName"
 			echo "Expected Name : $expectedName"
 
 			echo "##########################################"
 			echo "You are using wrong name for commits."
-			echo "Expected commit author format: IU-ID <IU-ID@indiana.edu>"
-			echo "Please configure your git user.name to IU-ID used to generate the SSH-key."
-			echo "You can fix your name using: git config user.name IU-ID"
+			echo "Expected commit author format: FirstName LastName <IU-ID@indiana.edu>"
+			echo "Please configure your git user.name to your Full Name before proceeding"
+			echo "You can fix your name using: git config user.name FirstName LastName"
 			echo "Then fix the last commit with: git commit --amend --reset-author"
 			echo "##########################################"
 			exit 1
+		else
+			exit 0
 	fi
 
 }
