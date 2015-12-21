@@ -33,10 +33,9 @@
 # ============================================================
 
 # Variable to store the file path of authorized names
-# 
 authorFile=~/.ssh/authorized_names
 
-# 
+# checkEmail function checks if the email address is registered in authorized_keys
 checkEmail() {
 	# If condition checks if the authorEmail is available in the authorized_keys
 	if [[ $(grep -w $authorEmail ~/.ssh/authorized_keys | wc -w) -gt 1 ]]; then
@@ -46,6 +45,7 @@ checkEmail() {
 		else
 			echo "##########################################"
 			echo "You are using an unauthorized email."
+			echo "##########################################"
 			echo "Expected commit author format: FirstName LastName <IU-ID@indiana.edu>"
 			echo "Please configure your git user.email to IU-email used to generate the SSH-key."
 			echo "You can fix your email using: git config user.email IU-ID@indiana.edu"
@@ -55,26 +55,40 @@ checkEmail() {
 	fi	
 }
 
+# checkName function checks if authorEmail is in the authorized_names
+# and forces the listed users to use the corresponding name
 checkName() {
 	# Retrieving the author name from SHA-1 (newsha)
 	authorName=$(git log -1 --pretty=format:%an $newsha)
-	#
+	# flag variable. Is raised to 1 when email address is found in authorFile
 	flag=0
 
+	# If condition checks if the file exists
 	if [[ -a $authorFile ]]; then
-		flag=0
-		#
+
+		# While loop reads the authorFile one line at a time
 		while read -r line || [[ -n $line ]]
 		do
+			# IFS sets the delimeter used to split the line using the delimeter 
+			# The split up values are stored into email and name
 			IFS=' ' read email name <<< "$line"
 
+			# If condition checks email against authorEmail of the commit
 			if [[ $authorEmail == $email ]]; then
 				# Uncomment this for debugging
 				# echo "Email found: $email"
+
+				# expectedName stores the name from the authorFile
 				expectedName=$name
+		
+				# flag is raised to 1, to let the script know email was found
 				flag=1
+
+				# Break jumps out of the while loop
+				# This prevents duplicate email entries to overwrite expectedName
 				break
 			fi
+		# authorFile is fed to the while loop to be read
 		done < $authorFile
 	fi
 
@@ -82,22 +96,26 @@ checkName() {
 	# echo "AuthorName: $expectedName"
 	# echo "Flag: $flag"
 
-	# If condition compares authorName and expectedName
+	# If condition compares authorName against expectedName and if flag is 1
 	if [[ $authorName == $expectedName && $flag -eq 1 ]]; then
 			# Uncomment this for debugging
 			# echo "Author Name: $expectedName"
 			exit 0
 
 		elif [[ $authorName != $expectedName && $flag -eq 1 ]]; then
-			
 			echo "##########################################"
 			echo "You are using wrong name for commits."
+			echo "Expected Name: $expectedName"
+			echo "Name used: $authorName"
+			echo "##########################################"
 			echo "Expected commit author format: FirstName LastName <IU-ID@indiana.edu>"
 			echo "Please configure your git user.name to your Full Name before proceeding"
 			echo "You can fix your name using: git config user.name \"FirstName LastName\""
 			echo "Then fix the last commit with: git commit --amend --reset-author"
 			echo "##########################################"
 			exit 1
+
+		# else condition is for people not in the authorFile
 		else
 			exit 0
 	fi
