@@ -6,7 +6,8 @@ P532 - Sub-Project : Git hooks written in bash, to filter Author Name/Email used
 Hooks
 -------------
 *pre-receive* : This hook is triggered after a local commit is pused.
-This hook checks the Author Email against authorized_keys, and then Author Name against Author Email to enforce a standard format of committing.
+This hook checks the Author Email against authorized_keys, and Author Name against authorized_names to enforce a standard format of committing.
+>authorFile is a variable in pre-receive which stores the path to authorized_names (Default: ~/.ssh/authorized_names)
 
 *pre-commit* : This hook is triggered before a local commit is made.
 This hook checks the Author Name against the Author Email to enforce a standard format of committing.
