@@ -11,7 +11,7 @@
 
 # Last Edited By: Ankit Sadana
 # Username: asadana
-# Last Edited On: 12/21/2015
+# Last Edited On: 1/13/2016
 
 # ============================================================
 
@@ -49,7 +49,7 @@ checkEmail() {
 			echo "Expected commit author format: FirstName LastName <IU-ID@indiana.edu>"
 			echo "Please configure your git user.email to IU-email used to generate the SSH-key."
 			echo "You can fix your email using: git config user.email IU-ID@indiana.edu"
-			echo "Then fix the last commit with: git commit --amend --reset-author"
+			echo "Then fix the last commit with: git commit --amend --no-edit --reset-author"
 			echo "##########################################"
 			exit 1
 	fi	
@@ -111,7 +111,7 @@ checkName() {
 			echo "Expected commit author format: FirstName LastName <IU-ID@indiana.edu>"
 			echo "Please configure your git user.name to your Full Name before proceeding"
 			echo "You can fix your name using: git config user.name \"FirstName LastName\""
-			echo "Then fix the last commit with: git commit --amend --reset-author"
+			echo "Then fix the last commit with: git commit --amend --no-edit --reset-author"
 			echo "##########################################"
 			exit 1
 
